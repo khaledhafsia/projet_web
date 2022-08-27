@@ -10,6 +10,20 @@
         <link href="../Assets/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     </head>
+    <?php
+    include "../Controller/UserC.php";
+    require_once "../Model/User.php";
+    $error = "";
+    if (isset($_POST["Username"]) && isset($_POST["password"])) {
+        if (!empty($_POST["Username"]) && !empty($_POST["password"])) {
+            $x = verification_sign_in($_POST["Username"], $_POST["password"]);
+            if ($x !== 0) {
+                Connect($x);
+                //header("Location: test.php");
+            } else $error = "****Le mote de passe ou le pseudo est incorrecte";
+        } else $error = "Remplissez les champs";
+    }
+    ?>
     <body class="body-misato">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
@@ -20,13 +34,13 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                                     <div class="card-body">
-                                        <form>
+                                        <form action="login.php" method="post">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
+                                                <input class="form-control" name="Username" id="Username" placeholder="name@example.com" />
                                                 <label for="inputEmail">Username</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputPassword" type="password" placeholder="Password" />
+                                                <input class="form-control" name="password" id="password" type="password" placeholder="Password" />
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                             <div class="form-check mb-3">
@@ -35,7 +49,7 @@
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" href="password.html">Forgot Password?</a>
-                                                <a class="btn btn-primary" href="index.html">Login</a>
+                                                <input type="submit" value="Login" class="btn btn-primary" href=></input>
                                             </div>
                                         </form>
                                     </div>

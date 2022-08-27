@@ -54,8 +54,8 @@ function verification_sign_in ($Username, $Password)
     $db=config::getConnexion();
     try{
         $query=$db->prepare($sql);
-        $query->execute(['Username' => $Username,
-            'Password' =>  $Password]);
+        $query->execute([':Username' => $Username,
+            ':Password' =>  $Password]);
         $count=$query->rowCount();
         if ($count==0){
             return 0;
@@ -78,14 +78,16 @@ function Connect ($id)
 {
     session_start();
     try{
-        $sql="SELECT * FROM user WHERE id=:id";
+        $sql="SELECT * FROM user WHERE id=$id";
         $db=config::getConnexion();
         $query=$db->prepare($sql);
-        $query->execute(['id' => $id]);
+        $query->execute();
         $count=$query->rowCount();
         $x=$query->fetch();
+        echo $sql;
+        echo $x;
         $_SESSION["id"]=$id;
-        $_SESSION["Usernmae"]=$x["Username"];
+        $_SESSION["Username"]=$x["Username"];
         $_SESSION["Password"]=$x["Password"];
         $_SESSION["Role"]=$x["Role"];
         $_SESSION["Email"]=$x["Email"];
@@ -142,3 +144,6 @@ function Get_one_User_Info($id)
         echo $e->getMessage();
     }
 }
+
+
+
