@@ -123,5 +123,10 @@ class User
         $this->cours = $cours;
     }
 
+    public function __toString()
+    {
+        return $this->getUsername()." ".$this->getEmail()." ".$this->getRole()." ".$this->getPassword();
+    }
+
 
 }
