@@ -18,8 +18,14 @@
         if (!empty($_POST["Username"]) && !empty($_POST["password"])) {
             $x = verification_sign_in($_POST["Username"], $_POST["password"]);
             if ($x !== 0) {
-                Connect($x);
-                //header("Location: test.php");
+                session_start();
+                $_SESSION["id"]=$x->getId();
+                $_SESSION["Username"]=$x->getUsername();
+                $_SESSION["Password"]=$x->getPassword();
+                $_SESSION["Role"]=$x->getRole();
+                $_SESSION["Email"]=$x->getEmail();
+
+                header("Location: test.php");
             } else $error = "****Le mote de passe ou le pseudo est incorrecte";
         } else $error = "Remplissez les champs";
     }
@@ -47,6 +53,12 @@
                                                 <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
                                                 <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
                                             </div>
+
+                                            <p style="color:#FF0000">
+                                                <?php
+                                                echo $error;
+                                                ?>
+                                            </p>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" href="password.html">Forgot Password?</a>
                                                 <input type="submit" value="Login" class="btn btn-primary" href=></input>
