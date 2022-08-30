@@ -8,6 +8,23 @@ class Cours
     private $Enseignat;
     private $Contenu;
     private $Date_Upload;
+    private $File;
+
+    /**
+     * @return mixed
+     */
+    public function getFile()
+    {
+        return $this->File;
+    }
+
+    /**
+     * @param mixed $File
+     */
+    public function setFile($File)
+    {
+        $this->File = $File;
+    }
 
     /**
      * @param $id
