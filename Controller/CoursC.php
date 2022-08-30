@@ -83,6 +83,34 @@ function get_teacher_name ($id)
 
 }
 
+function get_all_matieres ()
+{
+    $sql="SELECT * FROM Matiere";
+    $db=config::getConnexion();
+    try{
+        $query=$db->prepare($sql);
+        $query->execute();
+        $count=$query->rowCount();
+        if ($count==0){
+            return 0;
+        }
+        else
+        {
+            $A=[];
+            $x=$query->fetchAll();
+            foreach ($x as $M)
+                {
+                    $matiere=new Matiere($M["ID"],$M["Titre"]);
+                    array_push($A,$matiere);
+                }
+            return $A;
+        }}
+    catch (Exception $e)
+    {
+        echo $e->getMessage();
+    }
+}
+
 function get_matiere ($id)
 {
     $sql="SELECT * FROM Matiere WHERE id= :id";
@@ -131,5 +159,27 @@ function filter_Matiere ($A,$matiere)
         }
     }
     return $X;
+}
+function Add_Cours ($Cours)
+{
+        try
+        {
+            $pdo = config::getConnexion();
+            $query = $pdo->prepare(
+                'INSERT INTO `cours`( `Titre`, `Enseignant`, `Matiere`, `File`, `Contenu`) VALUES (:Titre,:Enseignant,:Matiere,:File,:Contenu)'
+            );
+            $query->execute([
+                ':Titre' => $Cours->getTitre(),
+                ':Enseignant' => $Cours->getEnseignant()->getID(),
+                ':Matiere' => $Cours->getMatiere()->getId(),
+                ':File' => $Cours->getFile(),
+                ':Contenu' =>$Cours->getContenu()
+
+            ]);
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
 }
 
