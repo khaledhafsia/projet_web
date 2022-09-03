@@ -50,7 +50,7 @@
 
             }
             add_quizz_passage($Q->getId(),$_SESSION["id"],$note);
-            //header("Location: Quizz_end.php?id=".$Q->getId());
+            header("Location: Quizz_end.php?id=".$Q->getId());
 
         }
     }
