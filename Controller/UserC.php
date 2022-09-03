@@ -24,6 +24,47 @@ function Create_User(User $New_User)
     }
 }
 
+function Update_User(User $New_User)
+{
+    try
+    {
+        $pdo = config::getConnexion();
+        $query = $pdo->prepare(
+            'UPDATE `user` SET Username=:Username, Email= :Email, Password=:Password, Role= :Role WHERE (ID = :id)'
+        );
+        $query->execute([
+            ':Username' => $New_User->getUsername(),
+            ':Email' => $New_User->getEmail(),
+            ':Password' => $New_User->getPassword(),
+            ':Role' => $New_User->getRole(),
+            ':id' => $New_User->getId()
+
+        ]);
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
+
+function Delete_User($id)
+{
+    try
+    {
+        $pdo = config::getConnexion();
+        $query = $pdo->prepare(
+            'DELETE FROM `user` WHERE (`ID` = :id)'
+        );
+        $query->execute([
+            ':id' => $id
+
+        ]);
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
 
 function Check_Info ($email,$Login,$id)
 {
@@ -46,6 +87,29 @@ function Check_Info ($email,$Login,$id)
     else return 1;}
     else return 1;
 }
+
+function Check_Info1 ($email,$Login,$id)
+{
+    $conn = config::getConnexion();
+
+    $sql="SELECT Username, Email FROM user WHERE ((Username='$Login') OR (Email='$email')) AND id != '$id'";
+    $result = $conn->query($sql);
+    if (isset($result->num_row))
+    {if ($result->num_rows > 0)
+    {
+        while($row = $result->fetch_assoc())
+        {
+            if (row["Login"]===$Login)
+                echo "Login déja utilisé";
+            if (row["Email"]===$email)
+                echo "Email déja utilisé";
+        }
+        return 0;
+    }
+    else return 1;}
+    else return 1;
+}
+
 
 
 function verification_sign_in ($Username, $Password)
@@ -122,9 +186,9 @@ function Get_All_User_Info ()
         echo $e->getMessage();
     }
 }
-function Get_one_User_Info($id)
+function Get_All_User_Info_back ()
 {
-    $sql="SELECT * FROM user where id=$id";
+    $sql="SELECT * FROM user";
     $db=config::getConnexion();
     try{
         $query=$db->prepare($sql);
@@ -136,7 +200,36 @@ function Get_one_User_Info($id)
         }
         else
         {
+            $A=[];
             $x=$query->fetchAll();
+            foreach ($x as $X)
+            {
+                $User_info = new User ($X["ID"],$X["Username"],$X["Password"],$X["Email"],$X["Role"],[]);
+                array_push($A,$User_info);
+            }
+            return $A;
+        }}
+    catch (Exception $e)
+    {
+        echo $e->getMessage();
+    }
+}
+function Get_one_User_Info($id)
+{
+    $sql="SELECT * FROM user where id=$id";
+    $db=config::getConnexion();
+    try{
+        $query=$db->prepare($sql);
+        $query->execute();
+        $count=$query->rowCount();
+        if ($count==0){
+            echo "Aucun Resultat";
+            return 0;
+
+        }
+        else
+        {
+            $x=$query->fetch();
             return $x;
         }}
     catch (Exception $e)

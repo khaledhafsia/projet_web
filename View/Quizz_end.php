@@ -17,42 +17,21 @@
     require_once  "../Controller/QuizzC.php";
     if (isset ($_GET["id"]))
     {
-
+        $Note=9;
         $Q=get_quizz_info ($_GET["id"]);
         if (! $Q)
         {
             header("Location: Register_Sccuess.html");
         }
-        if (get_quizz_passage ($_GET["id"],$_SESSION["id"]))
-        {
-            header("Location: Quizz_end.php?id=".$Q->getId());
-        }
-        if (isset ($_POST["Question_1"])&&isset ($_POST["Question_2"])&&isset ($_POST["Question_3"])&&isset ($_POST["Question_4"])&&isset ($_POST["Question_5"])
-            &&isset ($_POST["Question_6"])&&isset ($_POST["Question_7"])&&isset ($_POST["Question_8"])&&isset ($_POST["Question_9"])&&isset ($_POST["Question_10"]))
-        {
-            $note=0;
-            $A=[];
-            $responses=[];
-            for ($i=1;$i<11;$i++)
-            {
-                $que=new Quizz_Question("",$_POST["Question_".$i],$i);
-                array_push($A,$que);
-            }
-            foreach ($Q->getQuestions() as $q)
-            {
-                if ($A[$q->getNumber()-1]->getAnswer()==$q->getAnswer())
-                {
-                    $note+=2;
-                    array_push($responses,"S");
-                }
-                else
-                    array_push($responses,"F");
 
-            }
-            add_quizz_passage($Q->getId(),$_SESSION["id"],$note);
-            //header("Location: Quizz_end.php?id=".$Q->getId());
-
+        if (!get_quizz_passage ($_GET["id"],$_SESSION["id"]))
+        {
+            header("Location: Quizz.php?id=".$Q->getId());
         }
+        $A=get_quizz_passage ($_GET["id"],$_SESSION["id"]);
+
+
+
     }
 
 
@@ -91,7 +70,7 @@
                                 <div class="col-lg-8">
                                     <!-- Post content-->
                                     <article>
-                                        <form role="form" action="Quizz.php?id=<?php echo $Q->getId(); ?>" method="POST">
+                                        <form role="form">
                                             <div class="form-group">
                                             <?php $QS=$Q->getQuestions();
                                             foreach ($QS as $q) {?>
@@ -100,12 +79,21 @@
                                                     <h4>Question <?php echo $q->getNumber();?> :</h4>
                                                     <p><?php echo $q->getQuestion(); ?></p>
                                                 </label>
-                                                <input type="text" class="form-control" id="Question_<?php echo $q->getNumber();?>" name="Question_<?php echo $q->getNumber();?>">
+                                                <input disabled type="text" class="form-control" value="<?php echo $q->getAnswer();?>" id="Question_<?php echo $q->getNumber();?>" name="Question_<?php echo $q->getNumber();?>">
                                             <?php } ?>
                                             </div>
                                             <br>
+                                            <?php if ($A->getNote()<10) {?>
+                                            <h2 style="color: red">
+                                                Note : <?php echo $A->getNote()." Echoué";?>
+                                            </h2>
+                                            <?php } else {?>
+                                            <h2 style="color: green">
+                                                Note : <?php echo $A->getNote()." Reussi";?>
+                                            </h2>
+                                            <?php } ?>
+                                            <p>Passé le <?php echo $A->getTime(); ?></p>
 
-                                            <input type="submit" class="btn btn-success" value="Submit">
                                         </form>
                                     </article>
                                 </div>

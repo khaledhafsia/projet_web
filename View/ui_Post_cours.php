@@ -13,6 +13,7 @@
     </head>
     <?php
     require_once "../Controller/CoursC.php";
+    require_once "../Controller/QuizzC.php";
         if (isset($_GET["id"]))
         {
             $C=Get_Cours($_GET["id"]);
@@ -64,6 +65,16 @@
                         <section class="mb-5">
                             <p class="fs-5 mb-4"><?php echo $C->getContenu(); ?></p>
                         </section>
+                        <section class="mb-5">
+                            <?php
+                            $Q=get_quizz_info_from_cours ($C->getId());
+                            foreach ($Q as $q)
+                            {
+                                ?>
+                                <a href="quizz.php?id=<?php echo $q->getId(); ?>"><?php echo $q->getTitre(); ?></a>
+                            <?php } ?>
+                        </section>
+
                     </article>
                 </div>
                 

@@ -1,26 +1,35 @@
 <?php
-require "../Controller/CoursC.php";
-require_once "../Model/Matiere.php";
-require_once "../Model/User.php";
+require "../Controller/QuizzC.php";
+require_once "../Model/Quizz.php";
+require_once "../Model/Quizz_Question.php";
+require_once "../Model/Cours.php";
 
 session_start();
-$X=get_all_matieres();
-if (isset ($_SESSION["id"])) {
-    if ($_SESSION["Role"]=="user")
-        header("Home.html");
-    if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"]) && isset($_SESSION["id"])) {
-        $m=new Matiere($_POST["Matiere"],"");
-        $m->setId($_POST["Matiere"]);
-        $u=new User($_SESSION["id"],"","","","",[]);
-        $u->setId($_SESSION["id"]);
-        $Cours= new Cours(0, $_POST["Titre"], $m, $u, $_POST["Contenu"], null);
-        $Cours->setFile($_POST["File"]);
-        Update_Cours($Cours);
-        echo "done";
-    }
-}
-else
-    header("Location: login.php");
+$c=new Cours ($_GET["id"],"","","","","");
+    if (isset ($_SESSION["id"])) {
+        if ($_SESSION["Role"] == "user")
+            header("Home.html");
+        $Post_Exists=true;
+        for ($i=1;$i<11;$i++) {
+            if (!isset($_POST["Question_".$i]))
+                $Post_Exists=false;
+            if (!isset($_POST["Answer_".$i]))
+                $Post_Exists=false;
+        }
+        if (isset($_POST["Titre"]) && $Post_Exists) {
+            $A=[];
+            for ($i=1;$i<11;$i++) {
+                $Q = new Quizz_Question($_POST["Question_" . $i], $_POST["Answer_" . $i], $i);
+                array_push($A,$Q);
+            }
+
+            $q= new Quizz(0,$_POST["Titre"],20,$c,$A);
+            add_quizz($q);
+        }
+    } else
+        header("Location: login.php");
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -112,51 +121,39 @@ else
     </div>
     <div id="layoutSidenav_content">
         <main>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>
-                Add Cours
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>
+                            Add Quizz
 
-            </h3>
-            <form role="form" action="Add_Cours.php" method="POST">
-                <div class="form-group">
-                    <label for="Titre">
-                        Title
-                    </label>
-                    <input type="input" class="form-control" id="Titre" name="Titre">
+                        </h3>
+                        <form role="form" action="AddQuizz.php?id=<?php echo $c->getId(); ?>" method="POST">
+                            <div class="form-group">
+                                <label for="Titre">
+                                    <h4>Titre  :</h4>
+                                </label>
+                                <input type="text" class="form-control" id="Titre" name="Titre">
+                                <?php
+                                for($i=0;$i<10;$i++) {?>
+                                    <label for="Question_<?php echo $i+1;?>">
+                                        <h4>Question <?php echo $i+1;?> :</h4>
+                                    </label>
+                                    <input type="text" class="form-control" id="Question_<?php echo $i+1;?> " name="Question_<?php echo $i+1;?> ">
+                                    <label for="Question_<?php echo $i+1;?>">
+                                        <h4>Answer <?php echo $i+1;?>  :</h4>
+                                    </label>
+                                    <input type="text" class="form-control" id="Answer_<?php echo $i+1;?> " name="Answer_<?php echo $i+1;?>">
+                                <?php } ?>
+                            </div>
+                            <br>
+
+                            <input type="submit" class="btn btn-success" value="Submit">
+                        </form>
+
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="Contenu">
-                        Content
-                    </label>
-                    <textarea class="form-control" id="Contenu" name="Contenu" rows="3"></textarea>
-                </div>
-                <label for="Matiere">Choisir une Matière :</label>
-
-                <select name="Matiere" id="Matiere">
-                    <?php
-                     foreach ($X as $M)
-                         {
-                             ?>
-                    <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
-                    <?php
-                    }?>
-                </select>
-                <div class="form-group">
-
-                    <label for="File">
-                        File input
-                    </label>
-                    <input type="file" class="form-control-file" id="File" name="File">
-
-                </div>
-
-                <input type="submit" value="Add" class="btn btn-success">
-            </form>
-        </div>
-    </div>
-</div>
+            </div>
         </main>
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">

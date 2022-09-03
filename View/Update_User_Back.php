@@ -1,26 +1,32 @@
 <?php
-require "../Controller/CoursC.php";
-require_once "../Model/Matiere.php";
-require_once "../Model/User.php";
-
+require_once "../Controller/UserC.php";
 session_start();
-$X=get_all_matieres();
-if (isset ($_SESSION["id"])) {
-    if ($_SESSION["Role"]=="user")
-        header("Home.html");
-    if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"]) && isset($_SESSION["id"])) {
-        $m=new Matiere($_POST["Matiere"],"");
-        $m->setId($_POST["Matiere"]);
-        $u=new User($_SESSION["id"],"","","","",[]);
-        $u->setId($_SESSION["id"]);
-        $Cours= new Cours(0, $_POST["Titre"], $m, $u, $_POST["Contenu"], null);
-        $Cours->setFile($_POST["File"]);
-        Update_Cours($Cours);
-        echo "done";
+$error="";
+$X=Get_one_User_Info($_GET["id"]);
+if (!$X)
+    header("Location: List_Users_Back.php");
+$U=new User ($X["ID"],$X["Username"],$X["Password"],$X["Email"],$X["Role"],[]);
+if (isset($_POST["Username"]) && isset($_POST["Email"]) && isset($_POST["Password"]) && isset($_POST["Role"]))
+{
+
+    if (!Check_Info1 ($_POST["Email"],$_POST["Username"],$_GET["id"]))
+        $error="Username or Email is already Used";
+    else {
+        $U->setUsername($_POST["Username"]);
+        $U->setEmail($_POST["Email"]);
+        $U->setPassword($_POST["Password"]);
+        $U->setRole($_POST["Role"]);
+        Update_User($U);
+        if ($U->getId()==$_SESSION["id"]) {
+            $_SESSION["Username"] = $_POST["Username"];
+            $_SESSION["Email"] = $_POST["Email"];
+            $_SESSION["Password"] = $_POST["Password"];
+            $_SESSION["Role"] = $_POST["Role"];
+            header("Location: List_Users_Back.php");
+        }
     }
 }
-else
-    header("Location: login.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,7 +85,7 @@ else
                     </a>
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="List_Quizzes_Back.php">Gestion Quizzes</a>
+                            <a class="nav-link" href="layout-sidenav-light.html">Gestion Quizzes</a>
                         </nav>
                     </div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
@@ -112,72 +118,84 @@ else
     </div>
     <div id="layoutSidenav_content">
         <main>
-<div class="container-fluid">
+
+
+
+
+<!-- Page content-->
+<div class="container mt-5">
     <div class="row">
-        <div class="col-md-12">
-            <h3>
-                Add Cours
+        <div class="col-lg-8">
+            <!-- Post content-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>
+                            Update User
+                        </h2>
 
-            </h3>
-            <form role="form" action="Add_Cours.php" method="POST">
-                <div class="form-group">
-                    <label for="Titre">
-                        Title
-                    </label>
-                    <input type="input" class="form-control" id="Titre" name="Titre">
-                </div>
-                <div class="form-group">
-                    <label for="Contenu">
-                        Content
-                    </label>
-                    <textarea class="form-control" id="Contenu" name="Contenu" rows="3"></textarea>
-                </div>
-                <label for="Matiere">Choisir une Matière :</label>
+                        <div class="col-lg-8">
+                            <!-- Post content-->
+                            <article>
+                                <form role="form" action="Update_User_Back.php?id=<?php echo $U->getId(); ?>" method="POST">
+                                    <div class="form-group">
+                                        <br>
+                                        <label for="Username">
+                                            <h4>Username :</h4>
+                                        </label>
+                                        <input type="text" class="form-control" id="Username" name="Username" value="<?php echo $U->getUsername() ?>">
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <br>
+                                        <label for="Email">
+                                            <h4>Email :</h4>
+                                        </label>
+                                        <input type="Email" class="form-control" id="Email" name="Email" value="<?php echo $U->getEmail() ?>">
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                    <label for="Role">Role :</label>
 
-                <select name="Matiere" id="Matiere">
-                    <?php
-                     foreach ($X as $M)
-                         {
-                             ?>
-                    <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
-                    <?php
-                    }?>
-                </select>
-                <div class="form-group">
+                                    <select name="Role" id="Role">
+                                            <option value="admin">Admin</option>
+                                            <option value="user">User</option>
+                                            <option value="teacher">Teacher</option>
+                                    </select>
+                                    </div>
+                                    <br>
 
-                    <label for="File">
-                        File input
-                    </label>
-                    <input type="file" class="form-control-file" id="File" name="File">
+                                    <div class="form-group">
+                                        <br>
+                                        <label for="Password">
+                                            <h4>Password :</h4>
+                                        </label>
+                                        <input type="Password" class="form-control" id="Password" name="Password" value="<?php echo $U->getPassword() ?>">
+                                    </div>
+                                    <br>
+                                    <?php echo $error; ?>
+                                    <input type="submit" class="btn btn-success" value="Submit">
+                                    <br>
+                                </form>
+                                <br>
 
-                </div>
-
-                <input type="submit" value="Add" class="btn btn-success">
-            </form>
-        </div>
-    </div>
-</div>
-        </main>
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
+                            </article>
+                        </div>
                     </div>
                 </div>
             </div>
-        </footer>
+        </div>
+
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p></div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
 <script src="../Assets/js/scripts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="../Assets/assets/demo/chart-area-demo.js"></script>
-<script src="../Assets/assets/demo/chart-bar-demo.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-<script src="../Assets/js/datatables-simple-demo.js"></script>
 </body>
 </html>

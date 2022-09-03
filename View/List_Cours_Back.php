@@ -4,23 +4,17 @@ require_once "../Model/Matiere.php";
 require_once "../Model/User.php";
 
 session_start();
-$X=get_all_matieres();
 if (isset ($_SESSION["id"])) {
     if ($_SESSION["Role"]=="user")
         header("Home.html");
-    if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"]) && isset($_SESSION["id"])) {
-        $m=new Matiere($_POST["Matiere"],"");
-        $m->setId($_POST["Matiere"]);
-        $u=new User($_SESSION["id"],"","","","",[]);
-        $u->setId($_SESSION["id"]);
-        $Cours= new Cours(0, $_POST["Titre"], $m, $u, $_POST["Contenu"], null);
-        $Cours->setFile($_POST["File"]);
-        Update_Cours($Cours);
-        echo "done";
+    else
+        {
+            $Posts=Get_All_Cours();
     }
 }
 else
     header("Location: login.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,7 +73,7 @@ else
                     </a>
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="List_Quizzes_Back.php">Gestion Quizzes</a>
+                            <a class="nav-link" href="layout-sidenav-light.html">Gestion Quizzes</a>
                         </nav>
                     </div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
@@ -112,51 +106,41 @@ else
     </div>
     <div id="layoutSidenav_content">
         <main>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>
-                Add Cours
+<table border=3 align = 'center'>
+  <thead>
+      <tr style="text-align: center;"  >
+        <th style="text-align: center; width: 250px; font-size: 20px ">ID</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Titre</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Enseignant</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Matiere</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Supprimer</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Update</th>
+          <th style="text-align: center; width: 250px; font-size: 20px ">Check</th>
 
-            </h3>
-            <form role="form" action="Add_Cours.php" method="POST">
-                <div class="form-group">
-                    <label for="Titre">
-                        Title
-                    </label>
-                    <input type="input" class="form-control" id="Titre" name="Titre">
-                </div>
-                <div class="form-group">
-                    <label for="Contenu">
-                        Content
-                    </label>
-                    <textarea class="form-control" id="Contenu" name="Contenu" rows="3"></textarea>
-                </div>
-                <label for="Matiere">Choisir une Matière :</label>
-
-                <select name="Matiere" id="Matiere">
-                    <?php
-                     foreach ($X as $M)
-                         {
-                             ?>
-                    <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
-                    <?php
-                    }?>
-                </select>
-                <div class="form-group">
-
-                    <label for="File">
-                        File input
-                    </label>
-                    <input type="file" class="form-control-file" id="File" name="File">
-
-                </div>
-
-                <input type="submit" value="Add" class="btn btn-success">
-            </form>
-        </div>
-    </div>
-</div>
+      </tr>
+</thead>
+<?PHP
+        foreach($Posts as $P)
+        {
+      ?>
+        <tr  >
+          <td align="center"><?PHP echo $P->getId(); ?></td>
+          <td align="center"><?PHP echo $P->getTitre(); ?></td>>
+          <td align="center"><?PHP echo $P->getEnseignat()->getUsername(); ?></td>>
+          <td align="center"><?PHP echo $P->getMatiere()->getTitre(); ?></td>>
+          <td  align="center">
+            <a style="margin: 5px; "  class="btn btn-danger"  href="Delete_Cours.php?id=<?php echo $P->getId(); ?>" name="supprimer" value="supprimer" type="button">Supprimer</a>
+          </td>
+          <td  align="center">
+            <a style="margin: 5px; "  class="btn btn-warning"  href="Update_Cours.php?id=<?php echo $P->getId(); ?>" name="update" value="update" type="button">Update</a>
+          </td>
+            <td  align="center">
+                <a style="margin: 5px; "  class="btn btn-info"  href="ui_Post_cours.php?id=<?php echo $P->getId(); ?>" name="update" value="update" type="button">Check</a>
+            </td>
+          </tr>
+      <?PHP
+        }
+      ?>
         </main>
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">
@@ -181,3 +165,4 @@ else
 <script src="../Assets/js/datatables-simple-demo.js"></script>
 </body>
 </html>
+

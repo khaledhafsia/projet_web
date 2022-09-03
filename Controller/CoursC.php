@@ -170,7 +170,7 @@ function Add_Cours ($Cours)
             );
             $query->execute([
                 ':Titre' => $Cours->getTitre(),
-                ':Enseignant' => $Cours->getEnseignant()->getID(),
+                ':Enseignant' => $Cours->getEnseignat()->getID(),
                 ':Matiere' => $Cours->getMatiere()->getId(),
                 ':File' => $Cours->getFile(),
                 ':Contenu' =>$Cours->getContenu()
@@ -181,5 +181,59 @@ function Add_Cours ($Cours)
             echo $e->getMessage();
         }
 
+}
+
+function Update_Cours (Cours $Cours)
+{
+    try
+    {
+        $pdo = config::getConnexion();
+        if ($Cours->getFile()==""){
+        $query = $pdo->prepare(
+            'UPDATE `cours` SET  `Titre`= :Titre,`Matiere`= :Matiere, `Contenu`= :Contenu  WHERE ID= :id'
+        );
+            $query->execute([
+                ':id' => $Cours->getId(),
+                ':Titre' => $Cours->getTitre(),
+                ':Matiere' => $Cours->getMatiere()->getId(),
+                ':Contenu' =>$Cours->getContenu()
+
+            ]);
+        }
+        else{
+            $query = $pdo->prepare(
+                'UPDATE `cours` SET  `Titre`=:Titre,`Matiere`=:Matiere, `File`=:File, `Contenu`=:Contenu  WHERE ID= :id'
+            );
+            $query->execute([
+                ':id' => $Cours->getId(),
+                ':Titre' => $Cours->getTitre(),
+                ':Matiere' => $Cours->getMatiere()->getId(),
+                ':File' => $Cours->getFile(),
+                ':Contenu' =>$Cours->getContenu()
+
+            ]);
+        }
+
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+}
+function Delete_Cours ($id)
+{
+    try
+    {
+        $pdo = config::getConnexion();
+        $query = $pdo->prepare(
+            'DELETE FROM `cours` WHERE ID=:id'
+        );
+        $query->execute([
+            ':id' => $id
+        ]);
+    }
+    catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 }
 

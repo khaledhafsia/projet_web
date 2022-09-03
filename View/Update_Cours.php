@@ -5,22 +5,32 @@ require_once "../Model/User.php";
 
 session_start();
 $X=get_all_matieres();
-if (isset ($_SESSION["id"])) {
-    if ($_SESSION["Role"]=="user")
-        header("Home.html");
-    if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"]) && isset($_SESSION["id"])) {
-        $m=new Matiere($_POST["Matiere"],"");
-        $m->setId($_POST["Matiere"]);
-        $u=new User($_SESSION["id"],"","","","",[]);
-        $u->setId($_SESSION["id"]);
-        $Cours= new Cours(0, $_POST["Titre"], $m, $u, $_POST["Contenu"], null);
-        $Cours->setFile($_POST["File"]);
-        Update_Cours($Cours);
-        echo "done";
-    }
+if (!isset ($_GET["id"]))
+    header("Location: home.html");
+if (Get_Cours ($_GET["id"])) {
+    $Cours=Get_Cours ($_GET["id"]);
+
+    if (isset ($_SESSION["id"])) {
+        if ($_SESSION["Role"] == "user")
+            header("Home.html");
+        if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"])) {
+            $Cours = Get_Cours($_GET["id"]);
+            $m = new Matiere($_POST["Matiere"], "");
+            $m->setId($_POST["Matiere"]);
+            $u = new User($_SESSION["id"], "", "", "", "", []);
+            $u->setId($_SESSION["id"]);
+            $Cours->setTitre($_POST["Titre"]);
+            $Cours->setMatiere($m);
+            $Cours->setContenu($_POST["Contenu"]);
+            $Cours->setFile($_POST["File"]);
+            Update_Cours($Cours);
+            header("List_Cours_Back.php");
+        }
+    } else
+        header("Location: login.php");
 }
-else
-    header("Location: login.php");
+else header("Location: home.html");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -119,28 +129,29 @@ else
                 Add Cours
 
             </h3>
-            <form role="form" action="Add_Cours.php" method="POST">
+            <form role="form" action="Update_Cours.php?id=<?php echo $Cours->getId(); ?>" method="POST">
+
                 <div class="form-group">
                     <label for="Titre">
                         Title
                     </label>
-                    <input type="input" class="form-control" id="Titre" name="Titre">
+                    <input type="input" class="form-control" id="Titre" name="Titre" value="<?php echo $Cours->getTitre(); ?>">
                 </div>
                 <div class="form-group">
                     <label for="Contenu">
                         Content
                     </label>
-                    <textarea class="form-control" id="Contenu" name="Contenu" rows="3"></textarea>
+                    <textarea class="form-control" id="Contenu" name="Contenu" rows="3"><?php echo $Cours->getContenu(); ?></textarea>
                 </div>
                 <label for="Matiere">Choisir une Matière :</label>
 
                 <select name="Matiere" id="Matiere">
                     <?php
-                     foreach ($X as $M)
-                         {
-                             ?>
-                    <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
-                    <?php
+                    foreach ($X as $M)
+                    {
+                        ?>
+                        <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
+                        <?php
                     }?>
                 </select>
                 <div class="form-group">
@@ -157,20 +168,20 @@ else
         </div>
     </div>
 </div>
-        </main>
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                    <div>
-                        <a href="#">Privacy Policy</a>
-                        &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
-                </div>
+</main>
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; Your Website 2022</div>
+            <div>
+                <a href="#">Privacy Policy</a>
+                &middot;
+                <a href="#">Terms &amp; Conditions</a>
             </div>
-        </footer>
+        </div>
     </div>
+</footer>
+</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="../Assets/js/scripts.js"></script>
