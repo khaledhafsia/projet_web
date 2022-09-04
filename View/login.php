@@ -25,7 +25,7 @@
                 $_SESSION["Role"]=$x->getRole();
                 $_SESSION["Email"]=$x->getEmail();
 
-                header("Location: test.php");
+                header("Location: ui_List_cours.php");
             } else $error = "****Le mote de passe ou le pseudo est incorrecte";
         } else $error = "Remplissez les champs";
     }
