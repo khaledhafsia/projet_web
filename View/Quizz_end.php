@@ -29,9 +29,6 @@
             header("Location: Quizz.php?id=".$Q->getId());
         }
         $A=get_quizz_passage ($_GET["id"],$_SESSION["id"]);
-
-
-
     }
 
 

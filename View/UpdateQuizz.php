@@ -7,12 +7,11 @@ require_once "../Model/Cours.php";
 
 session_start();
 if (!isset ($_GET["id"]))
-    header("Location: List_Cours_Back.php");
-if (!Get_Cours ($_GET["id"]))
-    header("Location: List_Cours_Back.php");
+    header("Location: List_Quizz_Back.php");
+if (!get_quizz_info($_GET["id"]))
+    header("Location: List_Quizz_Back.php");
 
-
-$c=new Cours ($_GET["id"],"","","","","");
+$Q=get_quizz_info($_GET["id"]);
     if (isset ($_SESSION["id"])) {
         if ($_SESSION["Role"] == "user")
             header("Home.html");
@@ -26,11 +25,11 @@ $c=new Cours ($_GET["id"],"","","","","");
         if (isset($_POST["Titre"]) && $Post_Exists==true) {
             $A=[];
             for ($i=1;$i<11;$i++) {
-                $Q = new Quizz_Question($_POST["Question_" . $i], $_POST["Answer_" . $i], $i);
-                array_push($A,$Q);
+                $e = new Quizz_Question($_POST["Question_" . $i], $_POST["Answer_" . $i], $i);
+                array_push($A,$e);
             }
-            $q= new Quizz(0,$_POST["Titre"],20,$c,$A);
-            add_quizz($q);
+            $Q->setTitre($_POST["Titre"]);
+            $Q->setQuestions($A);
             header("Location: List_Quizz_Back.php");
         }
     } else
@@ -131,22 +130,23 @@ $c=new Cours ($_GET["id"],"","","","","");
                             Add Quizz
 
                         </h3>
-                        <form role="form" action="AddQuizz.php?id=<?php echo $c->getId(); ?>" method="POST">
+                        <form role="form" action="UpdateQuizz.php?id=<?php echo $Q->getId(); ?>" method="POST">
                             <div class="form-group">
                                 <label for="Titre">
                                     <h4>Titre  :</h4>
                                 </label>
-                                <input type="text" class="form-control" id="Titre" name="Titre">
+                                <input type="text" class="form-control" id="Titre" name="Titre" value="<?php echo $Q->getTitre(); ?>">
                                 <?php
-                                for($i=1;$i<11;$i++) {?>
-                                    <label for="Question_<?php echo $i;?>">
-                                        <h4>Question <?php echo $i;?> :</h4>
+                                $q=$Q->getQuestions();
+                                foreach ($q as $Qs){?>
+                                    <label for="Question_<?php echo $Qs->getNumber();?>">
+                                        <h4>Question <?php echo $Qs->getNumber();?> :</h4>
                                     </label>
-                                    <input type="text" class="form-control" id="Question_<?php echo $i;?>" name="Question_<?php echo $i;?>">
-                                    <label for="Answer_<?php echo $i;?>">
-                                        <h4>Answer <?php echo $i;?>  :</h4>
+                                    <input type="text" class="form-control" id="Question_<?php echo $Qs->getNumber();?>" name="Question_<?php echo $Qs->getNumber();?>" value="<?php echo $Qs->getQuestion(); ?>">
+                                    <label for="Answer_<?php echo $Qs->getNumber();?>">
+                                        <h4>Answer <?php echo $Qs->getNumber();?>  :</h4>
                                     </label>
-                                    <input type="text" class="form-control" id="Answer_<?php echo $i;?>" name="Answer_<?php echo $i;?>">
+                                    <input type="text" class="form-control" id="Answer_<?php echo $Qs->getNumber();?>" name="Answer_<?php echo $Qs->getNumber();?>" value="<?php echo $Qs->getAnswer(); ?>">
                                 <?php } ?>
                             </div>
                             <br>

@@ -32,7 +32,7 @@ else
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="index.html">Start Bootstrap</a>
+    <a class="navbar-brand ps-3" href="index.html">Online Learning</a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
@@ -73,7 +73,7 @@ else
                     </a>
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="layout-sidenav-light.html">Gestion Quizzes</a>
+                            <a class="nav-link" href="List_Quizz_Back.php">Gestion Quizzes</a>
                         </nav>
                     </div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
@@ -88,19 +88,15 @@ else
                         </nav>
                     </div>
                     <div class="sb-sidenav-menu-heading">Addons</div>
-                    <a class="nav-link" href="charts.html">
+                    <a class="nav-link" href="List_Users_Back.php">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                        Charts
-                    </a>
-                    <a class="nav-link" href="tables.html">
-                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                        Tables
+                        Gestion  Users
                     </a>
                 </div>
             </div>
             <div class="sb-sidenav-footer">
                 <div class="small">Logged in as:</div>
-                Start Bootstrap
+                <?php echo $_SESSION["Username"]; ?>
             </div>
         </nav>
     </div>
@@ -116,6 +112,7 @@ else
         <th style="text-align: center; width: 250px; font-size: 20px ">Supprimer</th>
         <th style="text-align: center; width: 250px; font-size: 20px ">Update</th>
           <th style="text-align: center; width: 250px; font-size: 20px ">Check</th>
+          <th style="text-align: center; width: 250px; font-size: 20px ">Add Quizz</th>
 
       </tr>
 </thead>
@@ -136,6 +133,9 @@ else
           </td>
             <td  align="center">
                 <a style="margin: 5px; "  class="btn btn-info"  href="ui_Post_cours.php?id=<?php echo $P->getId(); ?>" name="update" value="update" type="button">Check</a>
+            </td>
+            <td  align="center">
+                <a style="margin: 5px; "  class="btn btn-dark"  href="AddQuizz.php?id=<?php echo $P->getId(); ?>" name="quizz" value="quizz" type="button">Add Quizz</a>
             </td>
           </tr>
       <?PHP

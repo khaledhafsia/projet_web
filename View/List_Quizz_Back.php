@@ -1,41 +1,20 @@
 <?php
-require "../Controller/QuizzC.php";
 require "../Controller/CoursC.php";
-require_once "../Model/Quizz.php";
-require_once "../Model/Quizz_Question.php";
-require_once "../Model/Cours.php";
+require "../Controller/QuizzC.php";
+require_once "../Model/Matiere.php";
+require_once "../Model/User.php";
 
 session_start();
-if (!isset ($_GET["id"]))
-    header("Location: List_Cours_Back.php");
-if (!Get_Cours ($_GET["id"]))
-    header("Location: List_Cours_Back.php");
-
-
-$c=new Cours ($_GET["id"],"","","","","");
-    if (isset ($_SESSION["id"])) {
-        if ($_SESSION["Role"] == "user")
-            header("Home.html");
-        $Post_Exists=true;
-        for ($i=1;$i<11;$i++) {
-            if (!isset($_POST["Question_".$i]))
-                $Post_Exists=false;
-            if (!isset($_POST["Answer_".$i]))
-                $Post_Exists=false;
-        }
-        if (isset($_POST["Titre"]) && $Post_Exists==true) {
-            $A=[];
-            for ($i=1;$i<11;$i++) {
-                $Q = new Quizz_Question($_POST["Question_" . $i], $_POST["Answer_" . $i], $i);
-                array_push($A,$Q);
-            }
-            $q= new Quizz(0,$_POST["Titre"],20,$c,$A);
-            add_quizz($q);
-            header("Location: List_Quizz_Back.php");
-        }
-    } else
-        header("Location: login.php");
-
+if (isset ($_SESSION["id"])) {
+    if ($_SESSION["Role"]=="user")
+        header("Home.html");
+    else
+        {
+            $Posts=get_All_Quizzes ();
+    }
+}
+else
+    header("Location: login.php");
 
 ?>
 <!DOCTYPE html>
@@ -124,39 +103,41 @@ $c=new Cours ($_GET["id"],"","","","","");
     </div>
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>
-                            Add Quizz
+<table border=3 align = 'center'>
+  <thead>
+      <tr style="text-align: center;"  >
+        <th style="text-align: center; width: 250px; font-size: 20px ">ID</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Titre</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Cours</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Supprimer</th>
+        <th style="text-align: center; width: 250px; font-size: 20px ">Update</th>
+          <th style="text-align: center; width: 250px; font-size: 20px ">Voir Notes</th>
 
-                        </h3>
-                        <form role="form" action="AddQuizz.php?id=<?php echo $c->getId(); ?>" method="POST">
-                            <div class="form-group">
-                                <label for="Titre">
-                                    <h4>Titre  :</h4>
-                                </label>
-                                <input type="text" class="form-control" id="Titre" name="Titre">
-                                <?php
-                                for($i=1;$i<11;$i++) {?>
-                                    <label for="Question_<?php echo $i;?>">
-                                        <h4>Question <?php echo $i;?> :</h4>
-                                    </label>
-                                    <input type="text" class="form-control" id="Question_<?php echo $i;?>" name="Question_<?php echo $i;?>">
-                                    <label for="Answer_<?php echo $i;?>">
-                                        <h4>Answer <?php echo $i;?>  :</h4>
-                                    </label>
-                                    <input type="text" class="form-control" id="Answer_<?php echo $i;?>" name="Answer_<?php echo $i;?>">
-                                <?php } ?>
-                            </div>
-                            <br>
+      </tr>
+</thead>
+<?PHP
+        foreach($Posts as $P)
+        {
+            $C=Get_Cours($P->getCours());
+      ?>
+        <tr  >
+          <td align="center"><?PHP echo $P->getId(); ?></td>
+          <td align="center"><?PHP echo $P->getTitre(); ?></td>>
+          <td align="center"><?PHP echo $C->getTitre(); ?></td>>
+          <td  align="center">
+            <a style="margin: 5px; "  class="btn btn-danger"  href="Delete_Quizz.php?id=<?php echo $P->getId(); ?>" name="supprimer" value="supprimer" type="button">Supprimer</a>
+          </td>
+          <td  align="center">
+            <a style="margin: 5px; "  class="btn btn-warning"  href="UpdateQuizz.php?id=<?php echo $P->getId(); ?>" name="update" value="update" type="button">Update</a>
+          </td>
+            <td  align="center">
+                <a style="margin: 5px; "  class="btn btn-info"  href="List_Quizz_Passage.php?id=<?php echo $P->getId(); ?>" name="update" value="update" type="button">Notes</a>
+            </td>
 
-                            <input type="submit" class="btn btn-success" value="Submit">
-                        </form>
-
-                    </div>
-                </div>
-            </div>
+          </tr>
+      <?PHP
+        }
+      ?>
         </main>
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">
@@ -181,3 +162,4 @@ $c=new Cours ($_GET["id"],"","","","","");
 <script src="../Assets/js/datatables-simple-demo.js"></script>
 </body>
 </html>
+
