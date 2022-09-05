@@ -11,7 +11,7 @@ if (Get_Cours ($_GET["id"])) {
 
     if (isset ($_SESSION["id"])) {
         if ($_SESSION["Role"] == "user")
-            header("Home.html");
+            header("Home.php");
         else {
             Delete_Cours($_GET["id"]);
             echo "done";

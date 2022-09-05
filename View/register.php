@@ -15,6 +15,9 @@
     $id=0;
     include "../Controller/UserC.php";
     require_once "../Model/User.php";
+    session_start();
+    if (isset($_SESSION["id"]))
+        header("Location: home.php");
     if (isset($_POST["Username"]) && isset($_POST["Password"]) && isset($_POST["Email"]) && isset($_POST["Password_Confirm"]))
     {
         $New_User=new User(0,$_POST["Username"],$_POST["Password"],$_POST["Email"],"User",[]);

@@ -14,18 +14,21 @@
     include "../Controller/UserC.php";
     require_once "../Model/User.php";
     $error = "";
+    session_start();
+    if (isset($_SESSION["id"]))
+        header("Location: home.php");
     if (isset($_POST["Username"]) && isset($_POST["password"])) {
         if (!empty($_POST["Username"]) && !empty($_POST["password"])) {
             $x = verification_sign_in($_POST["Username"], $_POST["password"]);
             if ($x !== 0) {
-                session_start();
+
                 $_SESSION["id"]=$x->getId();
                 $_SESSION["Username"]=$x->getUsername();
                 $_SESSION["Password"]=$x->getPassword();
                 $_SESSION["Role"]=$x->getRole();
                 $_SESSION["Email"]=$x->getEmail();
 
-                header("Location: ui_List_cours.php");
+                header("Location: home.php");
             } else $error = "****Le mote de passe ou le pseudo est incorrecte";
         } else $error = "Remplissez les champs";
     }
@@ -60,7 +63,6 @@
                                                 ?>
                                             </p>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="password.html">Forgot Password?</a>
                                                 <input type="submit" value="Login" class="btn btn-primary" href=></input>
                                             </div>
                                         </form>

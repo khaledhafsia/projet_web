@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html style="font-size: 16px;" lang="en"><head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +32,10 @@
     <meta property="og:type" content="website">
   </head>
   <body class="u-body u-overlap u-xl-mode" data-lang="en"><header class="u-clearfix u-header u-header" id="sec-9c34"><div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-        <a href="login.php" class="u-active-black u-border-1 u-border-active-black u-border-blue-30 u-border-hover-black u-btn u-btn-round u-button-style u-hover-black u-none u-radius-12 u-text-active-white u-text-hover-white u-btn-1">Login!</a>
+          <?php if (!isset ($_SESSION["id"])){ ?>
+        <a href="login.php" class="u-active-black u-border-1 u-border-active-black u-border-blue-30 u-border-hover-black u-btn u-btn-round u-button-style u-hover-black u-none u-radius-12 u-text-active-white u-text-hover-white u-btn-1">Login</a> <?php }  else { ?>
+              <a href="logout.php" class="u-active-black u-border-1 u-border-active-black u-border-blue-30 u-border-hover-black u-btn u-btn-round u-button-style u-hover-black u-none u-radius-12 u-text-active-white u-text-hover-white u-btn-1">Logout</a>
+          <?php  } ?>
         <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1" data-responsive-from="XXL">
           <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
             <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
@@ -41,20 +45,29 @@
             </a>
           </div>
           <div class="u-custom-menu u-nav-container">
-            <ul class="u-nav u-spacing-2 u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" href="Home.html" style="padding: 10px 20px;">Home</a>
-</li><li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" style="padding: 10px 20px;" href="Add_Cours.php">Espace Enseignent</a>
-</li><li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" style="padding: 10px 20px; "href="ui_List_Cours.php">Espace etudiant</a>
-</li><li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" style="padding: 10px 20px;"href="Dashboard.php">Admin</a>
-</li></ul>
+            <ul class="u-nav u-spacing-2 u-unstyled u-nav-1">
+
+                <li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" href="Home.php" style="padding: 10px 20px;">Home</a>
+</li>
+                <li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" style="padding: 10px 20px; "href="ui_List_Cours.php">Espace etudiant</a></li>
+                <?php if (isset ($_SESSION["id"])) {
+                if ($_SESSION["Role"]=="admin" OR $_SESSION["Role"]=="teacher") {
+                ?>
+                <li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" style="padding: 10px 20px;" href="Dashboard.php">Espace Enseingnant</a>
+</li>
+                <?php } ?>
+                <?php if ($_SESSION["Role"]=="admin") { ?>
+                <li class="u-nav-item"><a class="u-active-grey-5 u-button-style u-hover-grey-10 u-nav-link u-text-active-grey-90 u-text-grey-90 u-text-hover-grey-90" style="padding: 10px 20px;"href="Dashboard.php">Admin</a>
+</li>
+            <?php }} ?>
+            </ul>
           </div>
           <div class="u-custom-menu u-nav-container-collapse">
             <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
               <div class="u-inner-container-layout u-sidenav-overflow">
                 <div class="u-menu-close"></div>
-                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Home.html">Home</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="login.php">Login</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link">Dashboard</a>
-</li><li class="u-nav-item"><a class="u-button-style u-nav-link">Admin</a>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                    <li class="u-nav-item"><a class="u-button-style u-nav-link" href="login.php">Login</a>
 </li></ul>
               </div>
             </div>

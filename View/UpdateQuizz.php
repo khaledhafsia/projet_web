@@ -14,7 +14,7 @@ if (!get_quizz_info($_GET["id"]))
 $Q=get_quizz_info($_GET["id"]);
     if (isset ($_SESSION["id"])) {
         if ($_SESSION["Role"] == "user")
-            header("Home.html");
+            header("Home.php");
         $Post_Exists=true;
         for ($i=1;$i<11;$i++) {
             if (!isset($_POST["Question_".$i]))

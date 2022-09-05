@@ -50,7 +50,8 @@ $Posts=Get_All_Cours();
             <!-- Nested row for non-featured blog posts-->
             <div class="column">
                 <?php
-
+                if ($Posts)
+                {
                 $F=0;
                 foreach ($Posts as $post)
                 {
@@ -70,7 +71,7 @@ $Posts=Get_All_Cours();
                     </div>
                     <?php
                     $F++;?>
-                <?php } ?>
+                <?php }} ?>
             </div>
         </div>
         <!-- Side widgets-->

@@ -9,7 +9,7 @@ if (!isset ($_GET["id"]))
 if (Get_All_User_Info_back ($_GET["id"])) {
     if (isset ($_SESSION["id"])) {
         if ($_SESSION["Role"] != "admin")
-            header("Home.html");
+            header("Home.php");
         else {
             Delete_User($_GET["id"]);
             echo "done";

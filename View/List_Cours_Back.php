@@ -6,7 +6,7 @@ require_once "../Model/User.php";
 session_start();
 if (isset ($_SESSION["id"])) {
     if ($_SESSION["Role"]=="user")
-        header("Home.html");
+        header("Home.php");
     else
         {
             $Posts=Get_All_Cours();
@@ -117,6 +117,8 @@ else
       </tr>
 </thead>
 <?PHP
+if ($Posts)
+{
         foreach($Posts as $P)
         {
       ?>
@@ -139,7 +141,7 @@ else
             </td>
           </tr>
       <?PHP
-        }
+        }       }
       ?>
         </main>
         <footer class="py-4 bg-light mt-auto">

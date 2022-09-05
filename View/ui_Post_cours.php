@@ -67,12 +67,14 @@
                         </section>
                         <section class="mb-5">
                             <?php
+
                             $Q=get_quizz_info_from_cours ($C->getId());
+                            if ($Q){
                             foreach ($Q as $q)
                             {
                                 ?>
                                 <a href="quizz.php?id=<?php echo $q->getId(); ?>"><?php echo $q->getTitre(); ?></a>
-                            <?php } ?>
+                            <?php }}?>
                         </section>
 
                     </article>

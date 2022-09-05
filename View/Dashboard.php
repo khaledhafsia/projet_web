@@ -2,7 +2,7 @@
 session_start();
 if (isset ($_SESSION["id"])) {
     if ($_SESSION["Role"]=="user")
-        header("Home.html");
+        header("Home.php");
 }
 else
     header("Location: login.php");

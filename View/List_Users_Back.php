@@ -6,7 +6,7 @@ require_once "../Model/User.php";
 session_start();
 if (isset ($_SESSION["id"])) {
     if (!$_SESSION["Role"]=="admin")
-        header("Home.html");
+        header("Home.php");
     else
         {
             $Users=Get_All_User_Info_back ();
@@ -114,6 +114,7 @@ else
       </tr>
 </thead>
 <?PHP
+if ($Users){
         foreach($Users as $P)
         {
       ?>
@@ -130,7 +131,7 @@ else
           </td>
           </tr>
       <?PHP
-        }
+        }}
       ?>
         </main>
         <footer class="py-4 bg-light mt-auto">

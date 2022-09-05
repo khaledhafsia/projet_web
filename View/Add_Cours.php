@@ -7,7 +7,7 @@ session_start();
 $X=get_all_matieres();
 if (isset ($_SESSION["id"])) {
     if ($_SESSION["Role"]=="user")
-        header("Home.html");
+        header("Home.php");
     if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"]) && isset($_SESSION["id"])) {
         $m=new Matiere($_POST["Matiere"],"");
         $m->setId($_POST["Matiere"]);
@@ -15,9 +15,10 @@ if (isset ($_SESSION["id"])) {
         $u->setId($_SESSION["id"]);
         $Cours= new Cours(0, $_POST["Titre"], $m, $u, $_POST["Contenu"], null);
         $Cours->setFile($_POST["File"]);
-        Update_Cours($Cours);
+        Add_Cours($Cours);
         echo "done";
     }
+    echo "nopost";
 }
 else
     header("Location: login.php");
@@ -132,12 +133,14 @@ else
 
                 <select name="Matiere" id="Matiere">
                     <?php
+                    if  ($X)
+                    {
                      foreach ($X as $M)
                          {
                              ?>
                     <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
                     <?php
-                    }?>
+                    }}?>
                 </select>
                 <div class="form-group">
 

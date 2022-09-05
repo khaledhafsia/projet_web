@@ -12,7 +12,7 @@ if (Get_Cours ($_GET["id"])) {
 
     if (isset ($_SESSION["id"])) {
         if ($_SESSION["Role"] == "user")
-            header("Home.html");
+            header("Home.php");
         if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"])) {
             $Cours = Get_Cours($_GET["id"]);
             $m = new Matiere($_POST["Matiere"], "");
