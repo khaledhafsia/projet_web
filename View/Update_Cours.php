@@ -14,7 +14,7 @@ if (Get_Cours ($_GET["id"])) {
     if (isset ($_SESSION["id"])) {
         if ($_SESSION["Role"] == "user")
             header("Home.php");
-        if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"])) {
+        if (isset($_POST["Titre"]) && isset($_POST["Contenu"])&& isset($_POST["Matiere"])) {
             $Cours = Get_Cours($_GET["id"]);
             $m = new Matiere($_POST["Matiere"], "");
             $m->setId($_POST["Matiere"]);
@@ -24,6 +24,7 @@ if (Get_Cours ($_GET["id"])) {
             $Cours->setMatiere($m);
             $Cours->setContenu($_POST["Contenu"]);
             $Cours->setFile($_FILES["File"]["name"]);
+            
             Upload_Image($_FILES['File'],$err);
             Update_Cours($Cours);
             header("List_Cours_Back.php");
@@ -127,7 +128,7 @@ else header("Location: home.html");
                 Update Cours
 
             </h3>
-            <form role="form" action="Update_Cours.php?id=<?php echo $Cours->getId(); ?>" method="POST">
+            <form role="form" action="Update_Cours.php?id=<?php echo $Cours->getId(); ?>" method="POST" enctype="multipart/form-data">
 
                 <div class="form-group">
                     <label for="Titre">
@@ -161,7 +162,7 @@ else header("Location: home.html");
 
                 </div>
 
-                <input type="submit" value="Add" class="btn btn-success">
+                <input type="submit" value="Update" class="btn btn-success">
             </form>
         </div>
     </div>

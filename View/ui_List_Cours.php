@@ -22,7 +22,7 @@ if (isset($_GET["filter"]))
 }
 if (isset($_GET["search"]))
 {
-    if ($_GET["search"]==" ")
+    if ($_GET["search"]!="")
         $Posts=search_filter($_GET["search"],$Posts);
 }
 

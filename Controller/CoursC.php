@@ -272,7 +272,7 @@ function Upload_Image($image,$err)
 {
     $err="";
     $target_dir = "../Assets/images_cours/";
-    $target_file = $target_dir . basename($image["name"]);
+        $target_file = $target_dir . basename($image["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
