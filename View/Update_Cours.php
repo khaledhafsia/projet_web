@@ -4,6 +4,7 @@ require_once "../Model/Matiere.php";
 require_once "../Model/User.php";
 
 session_start();
+$err="";
 $X=get_all_matieres();
 if (!isset ($_GET["id"]))
     header("Location: home.html");
@@ -22,7 +23,8 @@ if (Get_Cours ($_GET["id"])) {
             $Cours->setTitre($_POST["Titre"]);
             $Cours->setMatiere($m);
             $Cours->setContenu($_POST["Contenu"]);
-            $Cours->setFile($_POST["File"]);
+            $Cours->setFile($_FILES["File"]["name"]);
+            Upload_Image($_FILES['File'],$err);
             Update_Cours($Cours);
             header("List_Cours_Back.php");
         }

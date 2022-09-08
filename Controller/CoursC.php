@@ -32,6 +32,34 @@ function Get_All_Cours ()
     }
 }
 
+
+
+function search_filter($search,$list)
+{
+    $A=[];
+    foreach ($list as $i)
+    {
+        if (strpos($i->getTitre(),$search)!==false)
+        {
+            array_push($A,$i);
+        }
+    }
+    return $A;
+}
+
+function filter_mat($M,$list)
+{
+    $A=[];
+    foreach ($list as $i)
+    {
+        if ($i->getMatiere()->getId()==$M)
+        {
+            array_push($A,$i);
+        }
+    }
+    return $A;
+}
+
 function Get_Cours ($id)
 {
     try {
@@ -162,6 +190,7 @@ function filter_Matiere ($A,$matiere)
 }
 function Add_Cours ($Cours)
 {
+
         try
         {
             $pdo = config::getConnexion();
@@ -237,3 +266,59 @@ function Delete_Cours ($id)
     }
 }
 
+
+
+function Upload_Image($image,$err)
+{
+    $err="";
+    $target_dir = "../Assets/images_cours/";
+    $target_file = $target_dir . basename($image["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+// Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+        $check = getimagesize($image["tmp_name"]);
+        if($check !== false) {
+            $err="File is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+        } else {
+            echo "File is not an image.";
+            $uploadOk = 0;
+        }
+    }
+
+// Check if file already exists
+    if (file_exists($target_file)) {
+        $err= "Sorry, file already exists.";
+        $uploadOk = 0;
+    }
+
+// Check file size
+    if ($image["size"] > 500000) {
+        $err= "Sorry, your file is too large.";
+        $uploadOk = 0;
+    }
+
+// Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+        $err= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
+    }
+
+// Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        $err= "Sorry, your file was not uploaded.";
+        return false;
+// if everything is ok, try to upload file
+    } else {
+        if (move_uploaded_file($image["tmp_name"], $target_file)) {
+            return true;
+        } else {
+            $err= "Sorry, there was an error uploading your file.";
+        }
+    }
+
+
+}

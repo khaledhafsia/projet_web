@@ -5,20 +5,23 @@ require_once "../Model/User.php";
 
 session_start();
 $X=get_all_matieres();
+$err="";
 if (isset ($_SESSION["id"])) {
     if ($_SESSION["Role"]=="user")
         header("Home.php");
-    if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["File"]) && isset($_POST["Matiere"]) && isset($_SESSION["id"])) {
+    if (isset($_POST["Titre"]) && isset($_POST["Contenu"]) && isset($_POST["Matiere"]) && isset($_SESSION["id"])) {
+
         $m=new Matiere($_POST["Matiere"],"");
         $m->setId($_POST["Matiere"]);
         $u=new User($_SESSION["id"],"","","","",[]);
         $u->setId($_SESSION["id"]);
         $Cours= new Cours(0, $_POST["Titre"], $m, $u, $_POST["Contenu"], null);
-        $Cours->setFile($_POST["File"]);
+        $Cours->setFile($_FILES["File"]["name"]);
+        Upload_Image($_FILES['File'],$err);
         Add_Cours($Cours);
-        echo "done";
+
     }
-    echo "nopost";
+
 }
 else
     header("Location: login.php");
@@ -109,53 +112,57 @@ else
     </div>
     <div id="layoutSidenav_content">
         <main>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>
-                Add Cours
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>
+                            Add Cours
 
-            </h3>
-            <form role="form" action="Add_Cours.php" method="POST">
-                <div class="form-group">
-                    <label for="Titre">
-                        Title
-                    </label>
-                    <input type="input" class="form-control" id="Titre" name="Titre">
+                        </h3>
+                        <form role="form" action="Add_Cours.php" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="Titre">
+                                    Title
+                                </label>
+                                <input type="input" class="form-control" id="Titre" name="Titre">
+                            </div>
+                            <div class="form-group">
+                                <label for="Contenu">
+                                    Content
+                                </label>
+                                <textarea class="form-control" id="Contenu" name="Contenu" rows="3"></textarea>
+                            </div>
+                            <label for="Matiere">Choisir une Matière :</label>
+
+                            <select name="Matiere" id="Matiere">
+                                <?php
+                                if  ($X)
+                                {
+                                    foreach ($X as $M)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
+                                        <?php
+                                    }}?>
+                            </select>
+                            <div class="form-group">
+
+                                <label for="File">
+                                    File input
+                                </label>
+                                <input type="file" class="form-control-file" id="File" name="File">
+                                <p style="color:#FF0000">
+                                    <?php
+                                    echo $err;
+                                    ?>
+                                </p>
+                            </div>
+
+                            <input type="submit" value="Add" class="btn btn-success">
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="Contenu">
-                        Content
-                    </label>
-                    <textarea class="form-control" id="Contenu" name="Contenu" rows="3"></textarea>
-                </div>
-                <label for="Matiere">Choisir une Matière :</label>
-
-                <select name="Matiere" id="Matiere">
-                    <?php
-                    if  ($X)
-                    {
-                     foreach ($X as $M)
-                         {
-                             ?>
-                    <option value="<?php echo $M->getId(); ?>"><?php echo $M->getTitre(); ?></option>
-                    <?php
-                    }}?>
-                </select>
-                <div class="form-group">
-
-                    <label for="File">
-                        File input
-                    </label>
-                    <input type="file" class="form-control-file" id="File" name="File">
-
-                </div>
-
-                <input type="submit" value="Add" class="btn btn-success">
-            </form>
-        </div>
-    </div>
-</div>
+            </div>
         </main>
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid px-4">

@@ -13,7 +13,18 @@
 </head>
 <?php
 require_once "../Controller/CoursC.php";
+$M=get_all_matieres();
 $Posts=Get_All_Cours();
+
+if (isset($_GET["filter"]))
+{
+    $Posts=filter_mat($_GET["filter"],$Posts);
+}
+if (isset($_GET["search"]))
+{
+    if ($_GET["search"]==" ")
+        $Posts=search_filter($_GET["search"],$Posts);
+}
 
 
 ?>
@@ -21,14 +32,12 @@ $Posts=Get_All_Cours();
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#!">Start Bootstrap</a>
+        <a class="navbar-brand" href="home.php">Online Learning</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Blog</a></li>
+                <li class="nav-item"><a class="nav-link" href="home.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="ui_List_Cours.php">Espace Etudiants</a></li>
             </ul>
         </div>
     </div>
@@ -59,8 +68,7 @@ $Posts=Get_All_Cours();
 
                     <!-- Blog post-->
                     <div class="card mb-4">
-                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                        <div class="card-body">
+                        <a href="#!"><img class="card-img-top" src="../Assets/images_cours/<?php echo $post->getFile() ?>" alt="..." /></a>                        <div class="card-body">
                             <div class="small text-muted"><?php echo $post->getDateUpload(); ?></div>
                             <h2 class="card-title h4"><?php echo $post->getTitre(); ?></h2>
                             <div class="small text-muted"><?php echo $post->getMatiere()->GetTitre(); ?></div>
@@ -81,8 +89,10 @@ $Posts=Get_All_Cours();
                 <div class="card-header">Search</div>
                 <div class="card-body">
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                        <form method="GET" action="ui_List_Cours.php">
+                            <input class="form-control" id="search" name="search" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                            <input class="btn btn-primary" id="button-search" type="submit" value="Search">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -93,16 +103,11 @@ $Posts=Get_All_Cours();
                     <div class="row">
                         <div class="col-sm-6">
                             <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
+                                <?php
+                                foreach ($M as $m) {
+                                    ?>
+                                    <li><a href="ui_List_Cours.php?filter=<?php echo $m->getId(); ?>"><?php echo $m->getTitre(); ?></a></li>
+                                <?php }?>
                             </ul>
                         </div>
                     </div>

@@ -129,11 +129,11 @@ function add_quizz(Quizz $Quizz)
     {
         $pdo = config::getConnexion();
         $query = $pdo->prepare(
-            'UPDATE `quizz` SET (`Titre`, `Cours`, `Time`, `Question1`, `Question2`, `Question3`, `Question4`, `Question5`, `Question6`, `Question7`, `Question8`, `Question9`, `Question10`, `answer1`, `answer2`, `answer3`, `answer4`, `answer5`, `answer6`, `answer7`, `answer8`, `answer9`, `answer10`) VALUES ( :Title , :Cours , 20 , :Question_1 , :Question_2 , :Question_3, :Question_4, :Question_5, :Question_6, :Question_7, :Question_8, :Question_9, :Question_10, :Answer_1,:Answer_2,:Answer_3,:Answer_4,:Answer_5,:Answer_6,:Answer_7,:Answer_8,:Answer_9,:Answer_10) WHERE ID= :id');
+            'INSERT INTO `quizz` (`Titre`, `Cours`, `Time`, `Question1`, `Question2`, `Question3`, `Question4`, `Question5`, `Question6`, `Question7`, `Question8`, `Question9`, `Question10`, `answer1`, `answer2`, `answer3`, `answer4`, `answer5`, `answer6`, `answer7`, `answer8`, `answer9`, `answer10`) VALUES ( :Title , :Cours , 20 , :Question_1 , :Question_2 , :Question_3, :Question_4, :Question_5, :Question_6, :Question_7, :Question_8, :Question_9, :Question_10, :Answer_1,:Answer_2,:Answer_3,:Answer_4,:Answer_5,:Answer_6,:Answer_7,:Answer_8,:Answer_9,:Answer_10)');
         $query->execute(
             [
             ":Title" =>$Quizz->getTitre(),
-                ":Cours" =>$Quizz->getCours(),
+                ":Cours" =>$Quizz->getCours()->getId(),
                 ":Question_1"=>$Quizz->getQuestions()[0]->getQuestion(),
                 ":Question_2"=>$Quizz->getQuestions()[1]->getQuestion(),
                 ":Question_3"=>$Quizz->getQuestions()[2]->getQuestion(),
@@ -153,7 +153,7 @@ function add_quizz(Quizz $Quizz)
                 ":Answer_7"=>$Quizz->getQuestions()[6]->getAnswer(),
                 ":Answer_8"=>$Quizz->getQuestions()[7]->getAnswer(),
                 ":Answer_9"=>$Quizz->getQuestions()[8]->getAnswer(),
-                ":Answer_10"=>$Quizz->getQuestions()[9]->getAnswer(),
+                ":Answer_10"=>$Quizz->getQuestions()[9]->getAnswer()
             ]
         );
     }

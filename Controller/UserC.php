@@ -239,4 +239,16 @@ function Get_one_User_Info($id)
 }
 
 
+function email_account($Acc)
+{
+
+    $msg = "New Account Created\nWelcome".$Acc->getUsername();
+
+// use wordwrap() if lines are longer than 70 characters
+    $msg = wordwrap($msg, 70);
+
+// send email
+    mail($Acc->getEmail(), "Welcome To Online Learning", $msg);
+
+}
 

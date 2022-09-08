@@ -31,14 +31,12 @@
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="#!">Start Bootstrap</a>
+                <a class="navbar-brand" href="home.php">Online Learning</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Blog</a></li>
+                        <li class="nav-item"><a class="nav-link" href="home.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="ui_List_Cours.php">Espace Etudiants</a></li>
                     </ul>
                 </div>
             </div>
@@ -60,7 +58,7 @@
                             <a class="badge bg-secondary text-decoration-none link-light" href="#!"><?php echo $C->getEnseignat()->getUsername(); ?></a>
                         </header>
                         <!-- Preview image figure-->
-                        <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
+                        <figure class="mb-4"><img class="img-fluid rounded" src="../Assets/images_cours/<?php echo $C->getFile() ?>" alt="..."  /></figure>
                         <!-- Post content-->
                         <section class="mb-5">
                             <p class="fs-5 mb-4"><?php echo $C->getContenu(); ?></p>
